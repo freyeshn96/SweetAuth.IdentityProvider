@@ -1,6 +1,6 @@
 ﻿using IdentityProvider.Domain.Interfaces;
 
-namespace IdentityProvider.Domain.Entities
+namespace SweetAuth.IdentityProvider.Domain.Entities
 {
     public class BaseEntity : IIdentifiable, IActivable, IDeletable, ICreatedAt
     {
