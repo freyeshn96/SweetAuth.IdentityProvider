@@ -1,7 +1,9 @@
-﻿using IdentityProvider.Infrastructure.Contexts;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SweetAuth.IdentityProvider.Infrastructure.Contexts;
+using SweetAuth.IdentityProvider.Infrastructure.Interfaces;
+using SweetAuth.IdentityProvider.Infrastructure.UoW;
 
 namespace IdentityProvider.Infrastructure.Extensions
 {
@@ -17,6 +19,12 @@ namespace IdentityProvider.Infrastructure.Extensions
 
             });
 
+            return s;
+        }
+
+        public static IServiceCollection AddRepositories(this IServiceCollection s)
+        {
+            s.AddScoped<IUnitOfWork, UnitOfWork>();
             return s;
         }
     }
