@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace IdentityProvider.Infrastructure.Contexts
+namespace SweetAuth.IdentityProvider.Infrastructure.Contexts
 {
     public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
