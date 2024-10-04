@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SweetAuth.IdentityProvider.Domain.Entities;
 using SweetAuth.IdentityProvider.Domain.Interfaces;
+using SweetAuth.IdentityProvider.Domain.Specifications;
+using SweetAuth.IdentityProvider.Infrastructure.Specifications;
 
 namespace SweetAuth.IdentityProvider.Infrastructure.Repositories
 {
@@ -45,6 +47,16 @@ namespace SweetAuth.IdentityProvider.Infrastructure.Repositories
             return entity.ToList();
         }
 
+        public async Task<List<TEntity>> GetBySpecAsync(Specification<TEntity> spec, CancellationToken token)
+        {
+            return await SpecificationQueryBuilder.GetQuery(_dbContext.Set<TEntity>(), spec).ToListAsync(token);
+        }
+        
+        public List<TEntity> GetBySpec(Specification<TEntity> spec)
+        {
+            return SpecificationQueryBuilder.GetQuery(_dbContext.Set<TEntity>(), spec).ToList();
+        }
+
         public async Task<TEntity?> GetByIdAsync(int id, CancellationToken cancellationToken)
         {
             if (!this._trackingEntities)
@@ -81,6 +93,16 @@ namespace SweetAuth.IdentityProvider.Infrastructure.Repositories
             return this._dbContext.Set<TEntity>().Any(e => e.Id == id);
         }
         
+        public async Task<bool> ExistsBySpecAsync(Specification<TEntity> spec, CancellationToken cancellationToken)
+        {
+            return await SpecificationQueryBuilder.GetQuery(this._dbContext.Set<TEntity>(), spec).AnyAsync(cancellationToken);
+        }
+        
+        public bool ExistsBySpec(Specification<TEntity> spec)
+        {
+            return SpecificationQueryBuilder.GetQuery(this._dbContext.Set<TEntity>(), spec).Any();
+        }
+
         public IRepository<TEntity> WithTrackingValue(bool trackingValue)
         {
             this._trackingEntities = trackingValue;
@@ -149,6 +171,16 @@ namespace SweetAuth.IdentityProvider.Infrastructure.Repositories
             this._dbContext.Set<TEntity>().UpdateRange(entitiesList);
 
             return entitiesList;
+        }
+
+        public async Task<TEntity?> FirstBySpecAsync(Specification<TEntity> spec, CancellationToken token)
+        {
+            return await SpecificationQueryBuilder.GetQuery(_trackingEntities ? _dbContext.Set<TEntity>() : _dbContext.Set<TEntity>().AsNoTracking(), spec).FirstOrDefaultAsync(token);
+        }
+
+        public TEntity? FirstBySpec(Specification<TEntity> spec)
+        {
+            return SpecificationQueryBuilder.GetQuery(_trackingEntities ? _dbContext.Set<TEntity>() : _dbContext.Set<TEntity>().AsNoTracking(), spec).FirstOrDefault();
         }
     }
 }
